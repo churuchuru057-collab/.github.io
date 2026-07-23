@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-powered AKINAI+ | Generic Skills & Proactive Coaching Platform</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind Custom Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            primary: '#6A5CFF',
+                            secondary: '#D946EF',
+                            accent: '#38BDF8',
+                            darkBg: '#0F172A',
+                            darkCard: '#1E293B',
+                            lightBg: '#F8FAFC',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans JP', 'sans-serif'],
+                        display: ['Poppins', 'Noto Sans JP', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'glass': '0 8px 32px 0 rgba(106, 92, 255, 0.12)',
+                        'glow': '0 0 25px rgba(106, 92, 255, 0.35)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Glassmorphism Styles */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .dark .glass-panel {
+            background: rgba(30, 41, 59, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .dark .glass-card {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px -10px rgba(106, 92, 255, 0.25);
+        }
+
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(135deg, #6A5CFF 0%, #D946EF 50%, #38BDF8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #6A5CFF;
+            border-radius: 4px;
+        }
+
+        /* Chat Scrollbar */
+        .chat-scroll::-webkit-scrollbar {
+            width: 5px;
+        }
+        .chat-scroll::-webkit-scrollbar-thumb {
+            background: rgba(106, 92, 255, 0.4);
+            border-radius: 3px;
+        }
+
+        /* Animation Keyframes */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans transition-colors duration-300 min-h-screen flex flex-col">
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-slate-200/50 dark:border-slate-800/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchView('student-view')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-primary via-brand-secondary to-brand-accent flex items-center justify-center text-white font-bold text-xl shadow-glow">
+                        A+
+                    </div>
+                    <div>
+                        <span class="font-display font-extrabold text-xl tracking-tight gradient-text">AKINAI+</span>
+                        <span class="hidden sm:inline-block text-xs font-semibold px-2 py-0.5 ml-2 bg-brand-primary/10 text-brand-primary dark:bg-brand-primary/20 dark:text-purple-300 rounded-full border border-brand-primary/20">CUC GPAC Model</span>
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <nav class="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-600 dark:text-slate-300">
+                    <a href="#hero" class="hover:text-brand-primary transition">Home</a>
+                    <a href="#about" class="hover:text-brand-primary transition">About Research</a>
+                    <a href="#diagnosis-section" class="hover:text-brand-primary transition">Diagnosis & Gap</a>
+                    <a href="#ai-coach-section" class="hover:text-brand-primary transition">AI Coach</a>
+                    <a href="#story-analyzer-section" class="hover:text-brand-primary transition">Story Analyzer</a>
+                </nav>
+
+                <!-- Header Actions & Portal Switcher -->
+                <div class="flex items-center space-x-3">
+                    <!-- Perspective Switcher (Student / Teacher / Company) -->
+                    <div class="bg-slate-200/70 dark:bg-slate-800 p-1 rounded-lg flex items-center text-xs font-semibold">
+                        <button onclick="switchView('student-view')" id="btn-portal-student" class="px-2.5 py-1.5 rounded-md bg-white dark:bg-slate-700 text-brand-primary shadow-sm font-bold transition">学生</button>
+                        <button onclick="switchView('company-view')" id="btn-portal-company" class="px-2.5 py-1.5 rounded-md text-slate-500 hover:text-slate-900 dark:hover:text-white transition">企業 (meRAI)</button>
+                        <button onclick="switchView('teacher-view')" id="btn-portal-teacher" class="px-2.5 py-1.5 rounded-md text-slate-500 hover:text-slate-900 dark:hover:text-white transition">教員</button>
+                    </div>
+
+                    <!-- Language Selector -->
+                    <button id="lang-toggle" onclick="toggleLanguage()" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition text-xs font-bold flex items-center space-x-1">
+                        <i class="fa-solid fa-globe"></i>
+                        <span id="lang-label">JP</span>
+                    </button>
+
+                    <!-- Dark Mode Toggle -->
+                    <button onclick="toggleDarkMode()" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition">
+                        <i class="fa-solid fa-moon dark:hidden"></i>
+                        <i class="fa-solid fa-sun hidden dark:inline"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow">
+        
+        <!-- ==================== VIEW 1: STUDENT VIEW ==================== -->
+        <div id="student-view" class="space-y-20 pb-20">
+            
+            <!-- SECTION ① HERO -->
+            <section id="hero" class="relative overflow-hidden pt-12 pb-20 md:pt-20 md:pb-28">
+                <!-- Background Glow FX -->
+                <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-brand-primary/20 via-brand-secondary/20 to-brand-accent/20 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+                    <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-medium mb-8">
+                        <span class="flex h-2 w-2 rounded-full bg-brand-primary animate-ping"></span>
+                        <span data-i18n="hero-badge">千葉商科大学 (CUC) AKINAI × meRAI 次世代化プロジェクト</span>
+                    </div>
+
+                    <h1 class="text-4xl sm:text-6xl md:text-7xl font-display font-extrabold tracking-tight max-w-5xl mx-auto leading-tight mb-6">
+                        Grow Beyond Self Assessment.
+                        <span class="block gradient-text mt-2">AI-powered Generic Skills Coaching</span>
+                    </h1>
+
+                    <p class="max-w-2xl mx-auto text-base sm:text-lg text-slate-600 dark:text-slate-300 font-normal leading-relaxed mb-10" data-i18n="hero-desc">
+                        単なる自己分析で終わらせない。「自己成長志向」の学生と「組織貢献志向」の企業との【主体性の定義のギャップ】をAIが可視化・分析。個別最適化された1段階上のチャレンジへ伴走します。
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <a href="#diagnosis-section" onclick="startDiagnosisUI()" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-brand-primary to-brand-secondary text-white font-semibold text-lg shadow-glow hover:opacity-95 transition transform hover:-translate-y-0.5 flex items-center justify-center space-x-3">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            <span data-i18n="hero-cta-btn">5分間AI診断を開始する</span>
+                        </a>
+                        <a href="#about" class="w-full sm:w-auto px-8 py-4 rounded-2xl glass-card font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-graduation-cap text-brand-primary"></i>
+                            <span data-i18n="hero-sec-btn">研究背景とロジックを見る</span>
+                        </a>
+                    </div>
+
+                    <!-- Key Metrics Cards -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mt-16 text-left">
+                        <div class="p-4 rounded-2xl glass-card">
+                            <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Gap Analysis</div>
+                            <div class="text-xl font-bold text-slate-900 dark:text-white mt-1">企業水準との乖離</div>
+                            <div class="text-xs text-brand-primary mt-1 font-semibold">リアルタイム数値可視化</div>
+                        </div>
+                        <div class="p-4 rounded-2xl glass-card">
+                            <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Challenge Tier</div>
+                            <div class="text-xl font-bold text-slate-900 dark:text-white mt-1">Level 1 ~ Level 9</div>
+                            <div class="text-xs text-brand-secondary mt-1 font-semibold">スモールステップ設計</div>
+                        </div>
+                        <div class="p-4 rounded-2xl glass-card">
+                            <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">AI Coach</div>
+                            <div class="text-xl font-bold text-slate-900 dark:text-white mt-1">ChatGPT Companion</div>
+                            <div class="text-xs text-brand-accent mt-1 font-semibold">挫折理由を一緒に解体</div>
+                        </div>
+                        <div class="p-4 rounded-2xl glass-card">
+                            <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Integration</div>
+                            <div class="text-xl font-bold text-slate-900 dark:text-white mt-1">meRAI 企業連携</div>
+                            <div class="text-xs text-purple-500 mt-1 font-semibold">成長プロセスを評価</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION ② ABOUT RESEARCH & BACKGROUND -->
+            <section id="about" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+                <div class="glass-panel rounded-3xl p-6 sm:p-10 border border-slate-200/80 dark:border-slate-800">
+                    <div class="max-w-3xl mb-8">
+                        <span class="text-xs font-bold uppercase tracking-wider text-brand-primary">Research Background</span>
+                        <h2 class="text-3xl sm:text-4xl font-display font-extrabold text-slate-900 dark:text-white mt-1" data-i18n="about-title">
+                            なぜ就職支援ではなく「ギャップ解消」が必要なのか
+                        </h2>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+                        <!-- Student vs Company Gap Diagram Card -->
+                        <div class="p-6 rounded-2xl bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-4 flex items-center space-x-2">
+                                    <i class="fa-solid fa-code-compare text-brand-primary"></i>
+                                    <span>「主体性」の認知ギャップ構造</span>
+                                </h3>
+
+                                <div class="space-y-4 text-sm">
+                                    <div class="p-4 rounded-xl bg-purple-50 dark:bg-purple-900/20 border-l-4 border-purple-500">
+                                        <div class="font-bold text-purple-900 dark:text-purple-300">学生の認識：自己成長志向</div>
+                                        <p class="text-slate-600 dark:text-slate-300 mt-1">「自ら進んで学ぶ姿勢」「自分自身のスキルの成長」「指示を待たずに調べること」</p>
+                                    </div>
+
+                                    <div class="p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500">
+                                        <div class="font-bold text-blue-900 dark:text-blue-300">企業の期待：組織貢献志向</div>
+                                        <p class="text-slate-600 dark:text-slate-300 mt-1">「組織の課題を見つけ自発的に解決する」「周囲を巻き込み成果を創出する」</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-6 p-3 rounded-xl bg-slate-100 dark:bg-slate-700/50 text-xs text-slate-600 dark:text-slate-300">
+                                <i class="fa-solid fa-circle-info text-brand-primary mr-1"></i>
+                                大学での学びの機会（アクティブラーニングやインターン）はあるが、「何を具体行動に移せば企業レベルの主体性になるか」が不透明であることが課題です。
+                            </div>
+                        </div>
+
+                        <!-- Service Evolution Concept -->
+                        <div class="p-6 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 text-white flex flex-col justify-between">
+                            <div>
+                                <div class="text-xs font-semibold text-brand-accent uppercase tracking-wider mb-2">Platform Concept</div>
+                                <h3 class="text-xl font-bold mb-4">AKINAIの進化：Know から Act へ</h3>
+                                
+                                <div class="space-y-3">
+                                    <div class="flex items-center space-x-3 text-sm">
+                                        <span class="w-6 h-6 rounded-full bg-slate-700 flex items-center justify-center font-bold text-xs">1</span>
+                                        <span class="font-bold text-purple-300">Know</span>
+                                        <span class="text-slate-400">：自分の現状スコアを知る</span>
+                                    </div>
+                                    <div class="flex items-center space-x-3 text-sm">
+                                        <span class="w-6 h-6 rounded-full bg-slate-700 flex items-center justify-center font-bold text-xs">2</span>
+                                        <span class="font-bold text-purple-300">Understand</span>
+                                        <span class="text-slate-400">：企業基準とのギャップを理解する</span>
+                                    </div>
+                                    <div class="flex items-center space-x-3 text-sm">
+                                        <span class="w-6 h-6 rounded-full bg-brand-primary flex items-center justify-center font-bold text-xs">3</span>
+                                        <span class="font-bold text-brand-accent">Act (AI Challenge)</span>
+                                        <span class="text-slate-200">：ギャップを埋める最適行動を起こす</span>
+                                    </div>
+                                    <div class="flex items-center space-x-3 text-sm">
+                                        <span class="w-6 h-6 rounded-full bg-brand-secondary flex items-center justify-center font-bold text-xs">4</span>
+                                        <span class="font-bold text-pink-300">Reduce the Gap</span>
+                                        <span class="text-slate-200">：主体性の差が縮まり真の成長へ</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-6 pt-4 border-t border-slate-700 text-xs text-slate-300">
+                                AIは学生を一方的に評価・格付けするものではなく、常に隣でサポートする「パーソナルコーチ」です。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION ③ COMPARE TABLE -->
+            <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-10">
+                    <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-slate-900 dark:text-white">
+                        従来のAKINAI と AI-powered AKINAI+ の比較
+                    </h2>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm mt-2">「単なる自己分析ツール」から「主体性育成プラットフォーム」へのパラダイムシフト</p>
+                </div>
+
+                <div class="glass-card rounded-2xl overflow-hidden shadow-sm">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold border-b border-slate-200 dark:border-slate-700">
+                                <tr>
+                                    <th class="p-4 w-1/4">比較項目</th>
+                                    <th class="p-4 w-3/8 text-slate-500">従来のAKINAI (既存)</th>
+                                    <th class="p-4 w-3/8 text-brand-primary bg-brand-primary/5 dark:bg-brand-primary/10">AI-powered AKINAI+ (本提案)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+                                <tr>
+                                    <td class="p-4 font-bold text-slate-900 dark:text-white">サービス本質</td>
+                                    <td class="p-4 text-slate-600 dark:text-slate-400">自己評価の記録・グラフ化（Knowing）</td>
+                                    <td class="p-4 font-semibold text-slate-900 dark:text-white bg-brand-primary/5 dark:bg-brand-primary/10">企業基準とのギャップ解消と行動変容（Growing）</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4 font-bold text-slate-900 dark:text-white">分析の視点</td>
+                                    <td class="p-4 text-slate-600 dark:text-slate-400">過去の経験と現時点の自己評価のみ</td>
+                                    <td class="p-4 font-semibold text-slate-900 dark:text-white bg-brand-primary/5 dark:bg-brand-primary/10">企業が求める主体性水準との Gap Analysis</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4 font-bold text-slate-900 dark:text-white">診断後のアクション</td>
+                                    <td class="p-4 text-slate-600 dark:text-slate-400">レーダーチャート表示で終了（学生任せ）</td>
+                                    <td class="p-4 font-semibold text-slate-900 dark:text-white bg-brand-primary/5 dark:bg-brand-primary/10">レベル別パーソナライズチャレンジ（Level 1~9）提案</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4 font-bold text-slate-900 dark:text-white">サポート体制</td>
+                                    <td class="p-4 text-slate-600 dark:text-slate-400">特になし（定期的再評価のみ）</td>
+                                    <td class="p-4 font-semibold text-slate-900 dark:text-white bg-brand-primary/5 dark:bg-brand-primary/10">AI Coach による挫折理由の解体・24時間伴走</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4 font-bold text-slate-900 dark:text-white">企業連携 (meRAI)</td>
+                                    <td class="p-4 text-slate-600 dark:text-slate-400">現在のスキル数値のみ閲覧</td>
+                                    <td class="p-4 font-semibold text-slate-900 dark:text-white bg-brand-primary/5 dark:bg-brand-primary/10">ギャップを埋める「挑戦のプロセスと姿勢」を評価</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION ④ DIAGNOSIS (5 Categories, Interactive Questions) -->
+            <section id="diagnosis-section" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="glass-panel rounded-3xl p-6 sm:p-10 border border-slate-200 dark:border-slate-800 shadow-glass">
+                    
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-brand-primary">Interactive Assessment</span>
+                            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-slate-900 dark:text-white mt-1">
+                                ジェネリックスキル＆主体性 診断
+                            </h2>
+                        </div>
+                        <div id="diag-counter" class="text-xs font-bold px-3 py-1.5 rounded-full bg-brand-primary/10 text-brand-primary border border-brand-primary/20">
+                            準備完了
+                        </div>
+                    </div>
+
+                    <!-- Diagnosis Container -->
+                    <div id="diagnosis-container" class="space-y-6">
+                        
+                        <!-- Initial Start Box -->
+                        <div id="diag-start-box" class="text-center py-10 space-y-6">
+                            <div class="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-tr from-brand-primary to-brand-secondary flex items-center justify-center text-white text-3xl shadow-glow">
+                                <i class="fa-solid fa-clipboard-check"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900 dark:text-white">5カテゴリであなたのスキルを可視化</h3>
+                                <p class="text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto mt-2">
+                                    Initiative（主体性）、Communication（対話力）、Collaboration（協働性）、Critical Thinking（批判的思考）、AI Literacy（AI活用力）を測定します。
+                                </p>
+                            </div>
+                            <button onclick="runDiagnosisFlow()" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-brand-primary to-brand-secondary text-white font-bold shadow-md hover:opacity-95 transition">
+                                診断を開始する (全10問)
+                            </button>
+                        </div>
+
+                        <!-- Active Question Card (Hidden initially) -->
+                        <div id="diag-active-box" class="hidden space-y-6">
+                            <!-- Progress Bar -->
+                            <div>
+                                <div class="flex justify-between text-xs font-semibold text-slate-500 mb-2">
+                                    <span id="diag-cat-badge" class="text-brand-primary font-bold">Category</span>
+                                    <span id="diag-progress-text">1 / 10</span>
+                                </div>
+                                <div class="w-full h-2.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                                    <div id="diag-progress-bar" class="h-full bg-gradient-to-r from-brand-primary to-brand-secondary transition-all duration-300 w-10"></div>
+                                </div>
+                            </div>
+
+                            <!-- Question Card -->
+                            <div class="p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
+                                <h4 id="diag-question-text" class="text-lg font-bold text-slate-900 dark:text-white leading-relaxed">
+                                    質問文がここに表示されます
+                                </h4>
+
+                                <!-- Option Scale Buttons (1 to 5) -->
+                                <div class="grid grid-cols-1 sm:grid-cols-5 gap-3">
+                                    <button onclick="answerQuestion(1)" class="p-3 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-brand-primary hover:bg-brand-primary/5 dark:hover:bg-brand-primary/10 transition text-center group">
+                                        <div class="text-xs text-slate-400 group-hover:text-brand-primary font-bold">全く当てはまらない</div>
+                                        <div class="text-lg font-extrabold text-slate-700 dark:text-slate-200 mt-1">1</div>
+                                    </button>
+                                    <button onclick="answerQuestion(2)" class="p-3 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-brand-primary hover:bg-brand-primary/5 dark:hover:bg-brand-primary/10 transition text-center group">
+                                        <div class="text-xs text-slate-400 group-hover:text-brand-primary font-bold">あまり当てはまらない</div>
+                                        <div class="text-lg font-extrabold text-slate-700 dark:text-slate-200 mt-1">2</div>
+                                    </button>
+                                    <button onclick="answerQuestion(3)" class="p-3 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-brand-primary hover:bg-brand-primary/5 dark:hover:bg-brand-primary/10 transition text-center group">
+                                        <div class="text-xs text-slate-400 group-hover:text-brand-primary font-bold">どちらでもない</div>
+                                        <div class="text-lg font-extrabold text-slate-700 dark:text-slate-200 mt-1">3</div>
+                                    </button>
+                                    <button onclick="answerQuestion(4)" class="p-3 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-brand-primary hover:bg-brand-primary/5 dark:hover:bg-brand-primary/10 transition text-center group">
+                                        <div class="text-xs text-slate-400 group-hover:text-brand-primary font-bold">やや当てはまる</div>
+                                        <div class="text-lg font-extrabold text-slate-700 dark:text-slate-200 mt-1">4</div>
+                                    </button>
+                                    <button onclick="answerQuestion(5)" class="p-3 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-brand-primary hover:bg-brand-primary/5 dark:hover:bg-brand-primary/10 transition text-center group">
+                                        <div class="text-xs text-slate-400 group-hover:text-brand-primary font-bold">非常に当てはまる</div>
+                                        <div class="text-lg font-extrabold text-slate-700 dark:text-slate-200 mt-1">5</div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION ⑤ RESULT & ⑥ GAP ANALYSIS (Core Research Output) -->
+            <section id="results-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="space-y-8">
+                    
+                    <!-- Section Header -->
+                    <div class="text-center">
+                        <span class="text-xs font-bold uppercase tracking-wider text-brand-primary">Analysis Dashboard</span>
+                        <h2 class="text-3xl sm:text-4xl font-display font-extrabold text-slate-900 dark:text-white mt-1">
+                            診断結果 & 企業 Gap Analysis
+                        </h2>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm mt-2">あなたの現時点のスキルと、求める企業水準とのギャップ数値</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                        
+                        <!-- Radar Chart Box -->
+                        <div class="lg:col-span-6 glass-panel rounded-3xl p-6 border border-slate-200 dark:border-slate-800">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="font-bold text-slate-900 dark:text-white flex items-center space-x-2">
+                                    <i class="fa-solid fa-chart-pie text-brand-primary"></i>
+                                    <span>ジェネリックスキル比較チャート</span>
+                                </h3>
+                                <div class="flex items-center space-x-4 text-xs font-semibold">
+                                    <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-brand-primary mr-1"></span>あなた</span>
+                                    <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-rose-500 mr-1"></span>企業平均期待値</span>
+                                </div>
+                            </div>
+
+                            <div class="relative h-72 sm:h-80 w-full flex items-center justify-center">
+                                <canvas id="radarChart"></canvas>
+                            </div>
+
+                            <div id="archetype-badge-box" class="mt-4 p-4 rounded-2xl bg-brand-primary/10 border border-brand-primary/20 flex items-center space-x-4">
+                                <div class="w-12 h-12 rounded-xl bg-brand-primary text-white flex items-center justify-center text-2xl font-bold">
+                                    <i class="fa-solid fa-compass"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-brand-primary font-bold">AI Type Classification</div>
+                                    <div id="archetype-title" class="text-base font-extrabold text-slate-900 dark:text-white">探究探検家 (Explorer Type)</div>
+                                    <p id="archetype-desc" class="text-xs text-slate-600 dark:text-slate-300 mt-0.5">好奇心が高く自ら調べる力がありますが、周囲を巻き込んで組織成果にする主体性にギャップがあります。</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gap Breakdown Metrics Box -->
+                        <div class="lg:col-span-6 glass-panel rounded-3xl p-6 border border-slate-200 dark:border-slate-800 space-y-6">
+                            <h3 class="font-bold text-slate-900 dark:text-white flex items-center space-x-2">
+                                <i class="fa-solid fa-bolt text-amber-500"></i>
+                                <span>カテゴリ別 Gap 分析 (最も注目すべき点)</span>
+                            </h3>
+
+                            <div id="gap-bars-container" class="space-y-4">
+                                <!-- Dynamically populated by JS -->
+                            </div>
+
+                            <!-- AI Executive Summary Card -->
+                            <div class="p-4 rounded-2xl bg-gradient-to-r from-purple-900/90 to-slate-900 text-white space-y-2 border border-purple-500/30">
+                                <div class="flex items-center space-x-2 text-xs text-purple-300 font-bold uppercase">
+                                    <i class="fa-solid fa-robot"></i>
+                                    <span>AI Gap Diagnosis Summary</span>
+                                </div>
+                                <p id="ai-gap-summary-text" class="text-xs leading-relaxed text-slate-200">
+                                    あなたの「Initiative（主体性）」と「Collaboration（協働性）」において、企業期待値と約25%の乖離が見られます。自ら学び深める姿勢（個人成長）は素晴らしいですが、ゼミやサークルで「周囲を巻き込んで成果にする体験」を意識的に積むことが必要です。
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION ⑦ AI COACH (Main Interactive Chat UI) -->
+            <section id="ai-coach-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    
+                    <!-- Left Sidebar: Coach Context & API Key Options -->
+                    <div class="lg:col-span-4 space-y-6">
+                        <div class="glass-panel rounded-3xl p-6 border border-slate-200 dark:border-slate-800 space-y-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-primary to-brand-secondary text-white flex items-center justify-center text-xl shadow-glow">
+                                    <i class="fa-solid fa-brain"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-slate-900 dark:text-white">AI Personal Coach</h3>
+                                    <span class="text-xs text-emerald-500 font-semibold flex items-center mt-0.5">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span>
+                                        Gemini 3 Flash Active
+                                    </span>
+                                </div>
+                            </div>
+
+                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                                AIコーチはあなたの【診断結果】【性格分類】【企業とのギャップ】【現在挑戦中のChallenge】をすべて記憶した上で、伴走者として話しかけます。
+                            </p>
+
+                            <!-- Optional API Key Input Box for Native Gemini Access -->
+                            <div class="pt-4 border-t border-slate-200 dark:border-slate-700 space-y-2">
+                                <label class="text-xs font-bold text-slate-600 dark:text-slate-400 flex items-center justify-between">
+                                    <span>Gemini API Key (任意)</span>
+                                    <span class="text-[10px] text-brand-primary">未入力時は内蔵シミュレーション動作</span>
+                                </label>
+                                <input type="password" id="user-gemini-key" placeholder="AI Studioのキーを入力でリアルタイムAI応答" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-brand-primary outline-none">
+                            </div>
+
+                            <!-- Quick Preset Prompts -->
+                            <div class="pt-2 space-y-2">
+                                <div class="text-xs font-bold text-slate-500">クイック質問</div>
+                                <button onclick="sendQuickPrompt('主体性のギャップを縮めるため、今日できる一番簡単な行動は？')" class="w-full text-left p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-medium hover:bg-brand-primary/10 hover:text-brand-primary transition">
+                                    💬 今日できる一番簡単なアクションは？
+                                </button>
+                                <button onclick="sendQuickPrompt('チャレンジをやろうとしましたが、失敗するのが怖くて勇気が出ません。')" class="w-full text-left p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-medium hover:bg-brand-primary/10 hover:text-brand-primary transition">
+                                    💬 失敗が怖くて勇気が出ない時は？
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Chat Main Interface -->
+                    <div class="lg:col-span-8 glass-panel rounded-3xl p-6 border border-slate-200 dark:border-slate-800 flex flex-col h-[580px]">
+                        
+                        <!-- Chat Header -->
+                        <div class="pb-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <span class="w-3 h-3 rounded-full bg-brand-primary"></span>
+                                <span class="font-bold text-sm text-slate-900 dark:text-white">AI Coach Dialogue</span>
+                            </div>
+                            <span class="text-xs text-slate-400">Context: Individual Gap Reduction Mode</span>
+                        </div>
+
+                        <!-- Chat Messages Window -->
+                        <div id="chat-messages" class="flex-grow overflow-y-auto py-4 space-y-4 chat-scroll pr-2">
+                            <!-- Initial Greeting Message -->
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 rounded-xl bg-brand-primary text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
+                                    AI
+                                </div>
+                                <div class="p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-800 dark:text-slate-200 max-w-lg leading-relaxed shadow-sm space-y-2">
+                                    <p>こんにちは！あなたのパーソナルコーチです。</p>
+                                    <p>診断結果を見ると、学問への探究心は素晴らしいものの、<strong class="text-brand-primary">「周囲を巻き込む主体性」</strong>において企業水準との間に25%のギャップがあります。</p>
+                                    <p>焦る必要はありません！まずは「授業で1回挙手して質問する」レベルから一緒にステップアップしていきましょう。何か不安なことや相談はありますか？</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chat Input Box -->
+                        <div class="pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center space-x-2">
+                            <input type="text" id="chat-input" placeholder="AIコーチに相談する（例：時間がない時はどうすればいい？）..." onkeydown="if(event.key === 'Enter') sendMessage()" class="flex-grow p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 text-sm focus:ring-2 focus:ring-brand-primary outline-none">
+                            <button onclick="sendMessage()" class="px-5 py-3 rounded-xl bg-gradient-to-r from-brand-primary to-brand-secondary text-white font-bold text-sm hover:opacity-95 transition flex items-center space-x-2">
+                                <span>送信</span>
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- SECTION ⑧ PERSONALIZED CHALLENGES & ⑨ WHY THIS CHALLENGE? -->
+            <section id="challenges-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="space-y-8">
+                    
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-brand-primary">Action Roadmaps</span>
+                        <h2 class="text-3xl font-display font-extrabold text-slate-900 dark:text-white mt-1">
+                            Personalized Challenge (Level 1 ~ 9)
+                        </h2>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">AIがあなた専用に「少し頑張ればできる」レベルをステップ提案</p>
+                    </div>
+
+                    <!-- Level Progression Bar Component -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        
+                        <!-- Current Level Highlight Card -->
+                        <div class="p-6 rounded-3xl glass-panel border-2 border-brand-primary space-y-4 relative overflow-hidden">
+                            <div class="absolute top-0 right-0 bg-brand-primary text-white text-[10px] font-extrabold px-3 py-1 rounded-bl-xl">RECOMMENDED FOR YOU</div>
+                            
+                            <div class="flex items-center space-x-3">
+                                <span class="w-10 h-10 rounded-xl bg-brand-primary text-white font-extrabold flex items-center justify-center text-lg">L1</span>
+                                <div>
+                                    <h4 class="font-bold text-slate-900 dark:text-white">授業で一回質問をする</h4>
+                                    <span class="text-xs text-brand-primary font-semibold">Initiative Tier 1</span>
+                                </div>
+                            </div>
+
+                            <!-- SECTION ⑨ WHY THIS CHALLENGE? -->
+                            <div class="p-3 rounded-xl bg-purple-50 dark:bg-purple-900/20 text-xs space-y-1">
+                                <div class="font-bold text-brand-primary flex items-center space-x-1">
+                                    <i class="fa-solid fa-lightbulb"></i>
+                                    <span>Why this Challenge? (AI理由)</span>
+                                </div>
+                                <p class="text-slate-600 dark:text-slate-300">
+                                    あなたは思考力が高い反面、アウトプットの主体性が不足しています。まずはリスクの少ない講義での1言の発言が最高効率の突破口となります。
+                                </p>
+                            </div>
+
+                            <button onclick="toggleChallengeComplete(this)" class="w-full py-2.5 rounded-xl border border-brand-primary text-brand-primary font-bold text-xs hover:bg-brand-primary hover:text-white transition">
+                                <i class="fa-solid fa-check mr-1"></i> 完了にする
+                            </button>
+                        </div>
+
+                        <!-- Level 2 Card -->
+                        <div class="p-6 rounded-3xl glass-panel space-y-4 opacity-90">
+                            <div class="flex items-center space-x-3">
+                                <span class="w-10 h-10 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-extrabold flex items-center justify-center text-lg">L2</span>
+                                <div>
+                                    <h4 class="font-bold text-slate-900 dark:text-white">グループワークで最初の発言をする</h4>
+                                    <span class="text-xs text-slate-500 font-semibold">Initiative & Collaboration Tier 2</span>
+                                </div>
+                            </div>
+
+                            <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs space-y-1">
+                                <div class="font-bold text-slate-500 flex items-center space-x-1">
+                                    <i class="fa-solid fa-lock"></i>
+                                    <span>Why this Challenge?</span>
+                                </div>
+                                <p class="text-slate-500 dark:text-slate-400">
+                                    Level 1達成後に開放。自分の考えを他者に伝え、議論の場を前進させる主体性を訓練します。
+                                </p>
+                            </div>
+
+                            <button disabled class="w-full py-2.5 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-400 font-bold text-xs cursor-not-allowed">
+                                Level 1 完了後にロック解除
+                            </button>
+                        </div>
+
+                        <!-- Level 3 Card -->
+                        <div class="p-6 rounded-3xl glass-panel space-y-4 opacity-75">
+                            <div class="flex items-center space-x-3">
+                                <span class="w-10 h-10 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-extrabold flex items-center justify-center text-lg">L3</span>
+                                <div>
+                                    <h4 class="font-bold text-slate-900 dark:text-white">オフィスアワーで先生へ直接相談する</h4>
+                                    <span class="text-xs text-slate-500 font-semibold">Initiative Tier 3</span>
+                                </div>
+                            </div>
+
+                            <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs space-y-1">
+                                <div class="font-bold text-slate-500 flex items-center space-x-1">
+                                    <i class="fa-solid fa-lock"></i>
+                                    <span>Why this Challenge?</span>
+                                </div>
+                                <p class="text-slate-500 dark:text-slate-400">
+                                    学長・教員などの目上の関係者に対し自らアプローチし課題を解消する行動力を養います。
+                                </p>
+                            </div>
+
+                            <button disabled class="w-full py-2.5 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-400 font-bold text-xs cursor-not-allowed">
+                                ロック中
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION ⑪ LEARNING RECOMMENDATIONS -->
+            <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="glass-panel rounded-3xl p-6 sm:p-10 border border-slate-200 dark:border-slate-800 space-y-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-brand-primary">Micro Learning</span>
+                            <h2 class="text-2xl font-display font-extrabold text-slate-900 dark:text-white mt-1">
+                                チャレンジ達成を後押しする AI推薦コンテンツ
+                            </h2>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-3 glass-card">
+                            <span class="px-2 py-0.5 rounded bg-red-100 text-red-600 font-bold text-[10px]">TED Talk</span>
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white line-clamp-2">「優れたリーダーはどうやって行動を促すか」</h4>
+                            <p class="text-xs text-slate-500 leading-normal">主体的な発言や巻き込みのゴールデンサークル理論。</p>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-3 glass-card">
+                            <span class="px-2 py-0.5 rounded bg-blue-100 text-blue-600 font-bold text-[10px]">CUC Event</span>
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white line-clamp-2">学内プロジェクト実践ワーキング</h4>
+                            <p class="text-xs text-slate-500 leading-normal">学長プロジェクト・地域貢献での主体性発揮イベント。</p>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-3 glass-card">
+                            <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-600 font-bold text-[10px]">Book</span>
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white line-clamp-2">「1分の思考で行動を変える」</h4>
+                            <p class="text-xs text-slate-500 leading-normal">質問が思いつかない課題を解決する思考トレーニング。</p>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-3 glass-card">
+                            <span class="px-2 py-0.5 rounded bg-purple-100 text-purple-600 font-bold text-[10px]">Internship</span>
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white line-clamp-2">短期PBLインターンシップ募集</h4>
+                            <p class="text-xs text-slate-500 leading-normal">企業とギャップを埋めるための即実践型プログラム。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION ⑫ AI STORY ANALYZER (Experience to Generic Skills & ES Generator) -->
+            <section id="story-analyzer-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="glass-panel rounded-3xl p-6 sm:p-10 border border-slate-200 dark:border-slate-800 space-y-6">
+                    <div class="max-w-3xl">
+                        <span class="text-xs font-bold uppercase tracking-wider text-brand-primary">AKINAI Input Transformation</span>
+                        <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-slate-900 dark:text-white mt-1">
+                            AI Story Analyzer（経験テキストの価値変換）
+                        </h2>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">
+                            AKINAIに入力した日常の経験やエピソードから、AIが企業視点のコンピテンシーを抽出。ガクチカ・ES・面接回答・英語版まで一括生成します。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                        <!-- Input Box -->
+                        <div class="lg:col-span-5 space-y-4">
+                            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                                学生生活の経験・エピソード（殴り書きでOK）
+                            </label>
+                            <textarea id="story-input" rows="6" placeholder="例：大学のゼミでグループ発表を行った。最初は誰も意見を出さなかったので、自分が先にテーマのたたき台を作って提示した。その結果、議論が活発になり最優秀賞を取れた。" class="w-full p-4 rounded-2xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 text-xs sm:text-sm focus:ring-2 focus:ring-brand-primary outline-none"></textarea>
+                            
+                            <button onclick="analyzeStoryWithAI()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-accent text-white font-bold text-sm shadow-md hover:opacity-95 transition flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                <span>AIコンピテンシー解析を実行</span>
+                            </button>
+                        </div>
+
+                        <!-- Output Box -->
+                        <div class="lg:col-span-7 p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-4 min-h-[260px]">
+                            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-3">
+                                <span class="text-xs font-bold text-brand-primary">AI Analytics & Conversion Output</span>
+                                <span id="story-status" class="text-[10px] text-slate-400">解析待機中</span>
+                            </div>
+
+                            <div id="story-output-content" class="space-y-4 text-xs sm:text-sm">
+                                <p class="text-slate-400 italic">左側にエピソードを入力して「AIコンピテンシー解析を実行」を押してください。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION ⑬ meRAI INTEGRATION -->
+            <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="p-8 rounded-3xl bg-gradient-to-r from-slate-900 via-purple-950 to-slate-900 text-white space-y-6 shadow-glow border border-purple-500/30">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <div class="space-y-2 max-w-2xl">
+                            <span class="text-xs font-bold text-brand-accent uppercase tracking-widest">System Integration</span>
+                            <h3 class="text-2xl font-bold">AKINAI+ × meRAI 連携エコシステム</h3>
+                            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                                企業は「現在のスキル数値」だけでなく、学生が「自らのギャップを認識し、Challengeによって克服しようと努力した行動プロセス（成長軌跡）」をmeRAIを通じて評価・スカウトできます。
+                            </p>
+                        </div>
+                        <button onclick="switchView('company-view')" class="px-6 py-3 rounded-xl bg-white text-slate-900 font-bold text-sm hover:bg-slate-100 transition flex-shrink-0">
+                            企業ダッシュボードを見る <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- ==================== VIEW 2: COMPANY DASHBOARD ==================== -->
+        <div id="company-view" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+            <div class="p-6 rounded-3xl glass-panel border border-slate-200 dark:border-slate-800">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <span class="text-xs font-bold text-brand-secondary uppercase">meRAI Recruiter View</span>
+                        <h2 class="text-2xl font-bold text-slate-900 dark:text-white">企業向け 学生成長追跡ダッシュボード</h2>
+                        <p class="text-xs text-slate-500">※学生のプライバシーに配慮し、匿名化されたギャップ改善プロセスを閲覧・オファーできます。</p>
+                    </div>
+                    <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">認証済み企業ポータル</span>
+                </div>
+
+                <!-- Candidate List Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+                    <div class="p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-4">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="text-xs font-bold text-slate-400">Student ID #CUC-8921</span>
+                                <h4 class="font-bold text-slate-900 dark:text-white">商学部 3年 (探索型)</h4>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-lg bg-brand-primary/10 text-brand-primary text-xs font-bold">適合度 88%</span>
+                        </div>
+
+                        <div class="space-y-2 text-xs">
+                            <div class="flex justify-between text-slate-600 dark:text-slate-300">
+                                <span>主体性ギャップ改善率:</span>
+                                <span class="font-bold text-emerald-500">+35% (直近2ヶ月)</span>
+                            </div>
+                            <div class="flex justify-between text-slate-600 dark:text-slate-300">
+                                <span>達成したChallenge:</span>
+                                <span class="font-bold">Level 4 (ゼミでの司会)</span>
+                            </div>
+                        </div>
+
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-xs text-slate-600 dark:text-slate-300">
+                            「自分の意見を述べるだけでなく、グループの合意形成を導くチャレンジを完遂」
+                        </div>
+
+                        <button class="w-full py-2 rounded-xl bg-brand-primary text-white font-bold text-xs hover:opacity-90 transition">
+                            面談オファーを送信する
+                        </button>
+                    </div>
+
+                    <div class="p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-4">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="text-xs font-bold text-slate-400">Student ID #CUC-7104</span>
+                                <h4 class="font-bold text-slate-900 dark:text-white">サービス創造学部 3年</h4>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-lg bg-brand-primary/10 text-brand-primary text-xs font-bold">適合度 92%</span>
+                        </div>
+
+                        <div class="space-y-2 text-xs">
+                            <div class="flex justify-between text-slate-600 dark:text-slate-300">
+                                <span>主体性ギャップ改善率:</span>
+                                <span class="font-bold text-emerald-500">+50% (直近3ヶ月)</span>
+                            </div>
+                            <div class="flex justify-between text-slate-600 dark:text-slate-300">
+                                <span>達成したChallenge:</span>
+                                <span class="font-bold">Level 6 (インターン企画)</span>
+                            </div>
+                        </div>
+
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-xs text-slate-600 dark:text-slate-300">
+                            「課題発見から周囲を巻き込んだイベント立案までを自発的に完了」
+                        </div>
+
+                        <button class="w-full py-2 rounded-xl bg-brand-primary text-white font-bold text-xs hover:opacity-90 transition">
+                            面談オファーを送信する
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== VIEW 3: TEACHER DASHBOARD ==================== -->
+        <div id="teacher-view" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+            <div class="p-6 rounded-3xl glass-panel border border-slate-200 dark:border-slate-800 space-y-6">
+                <div>
+                    <span class="text-xs font-bold text-brand-accent uppercase">Faculty Analytics View</span>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">教員向け クラス・学年全体コンピテンシー分析</h2>
+                    <p class="text-xs text-slate-500">授業改善やアクティブラーニング施策の設計に役立つ集計データです。</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                        <div class="text-xs text-slate-400 font-bold">全体の平均主体性スコア</div>
+                        <div class="text-3xl font-extrabold text-slate-900 dark:text-white mt-1">62.4 / 100</div>
+                        <div class="text-xs text-emerald-500 mt-2 font-semibold"><i class="fa-solid fa-arrow-up"></i> 前月比 +4.2pt</div>
+                    </div>
+                    <div class="p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                        <div class="text-xs text-slate-400 font-bold">最もボトルネックとなっているスキル</div>
+                        <div class="text-3xl font-extrabold text-rose-500 mt-1">Initiative</div>
+                        <div class="text-xs text-slate-500 mt-2">企業水準ギャップ: 28%</div>
+                    </div>
+                    <div class="p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                        <div class="text-xs text-slate-400 font-bold">今月のChallenge達成件数</div>
+                        <div class="text-3xl font-extrabold text-brand-primary mt-1">1,248 件</div>
+                        <div class="text-xs text-slate-500 mt-2">アクティブ率: 84.2%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION ⑯ FUTURE VISION -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 border-t border-slate-200 dark:border-slate-800">
+            <div class="text-center max-w-3xl mx-auto space-y-4">
+                <span class="text-xs font-bold uppercase tracking-wider text-brand-primary">Future Impact</span>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">AI-powered AKINAI+ がもたらす社会価値</h2>
+                <p class="text-xs sm:text-sm text-slate-500 leading-relaxed">
+                    大学教育における主体性育成と、企業が求める実践力とのミスマッチを解消。学生は自立的な行動習慣を獲得し、大学は客観的な成長データに基づいた教育改革を実現します。
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 text-xs">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+            <p>© 2026 AI-powered AKINAI+ Prototype for CUC GPAC Symposium Presentation.</p>
+            <p class="text-slate-500">Chiba University of Commerce (千葉商科大学) - Generic Skills Coaching Model</p>
+        </div>
+    </footer>
+
+    <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+    <script>
+        // Global Application State
+        let currentPortal = 'student-view';
+        let isDarkMode = false;
+        let currentLang = 'JP';
+
+        // Assessment Questions Data
+        const diagnosisQuestions = [
+            { id: 1, cat: 'Initiative', text: '授業やグループワークで、誰も発言しない時に自分から発言を始めることができる。' },
+            { id: 2, cat: 'Initiative', text: '与えられた課題だけでなく、自ら追加の疑問点や調査テーマを見つけて行動できる。' },
+            { id: 3, cat: 'Communication', text: '自分の考えや意見を、他人にわかりやすく整理して論理的に伝えることができる。' },
+            { id: 4, cat: 'Communication', text: '相手の意見の背景にある理由や感情を配慮しながら聴くことができる。' },
+            { id: 5, cat: 'Collaboration', text: '多様な価値観を持つメンバーと協力し、共通のゴールに向けて行動できる。' },
+            { id: 6, cat: 'Collaboration', text: 'チームの雰囲気が悪くなった時、潤滑油として働きかける工夫ができる。' },
+            { id: 7, cat: 'Critical Thinking', text: '提示された情報や前提をそのまま鵜呑みにせず、「本当にそうか？」と問い直せる。' },
+            { id: 8, cat: 'Critical Thinking', text: '問題の原因を表面的な現象ではなく、構造的な要素に分解して考えられる。' },
+            { id: 9, cat: 'AI Literacy', text: 'ChatGPTなどの生成AIを活用して、作業効率化やアイデア出しの壁打ちを行える。' },
+            { id: 10, cat: 'AI Literacy', text: 'AIの出力結果の正当性を検証し、リスクを理解した上で活用できる。' }
+        ];
+
+        let currentQuestionIndex = 0;
+        let assessmentScores = {
+            Initiative: 3,
+            Communication: 4,
+            Collaboration: 3,
+            CriticalThinking: 4,
+            AILiteracy: 3
+        };
+
+        // Standard Benchmark Required by Companies for Comparison
+        const companyExpectations = {
+            Initiative: 4.5,       // ~90%
+            Communication: 4.2,    // ~84%
+            Collaboration: 4.4,    // ~88%
+            CriticalThinking: 4.0, // ~80%
+            AILiteracy: 4.1        // ~82%
+        };
+
+        let radarChartInstance = null;
+
+        function switchView(viewId) {
+            document.getElementById('student-view').classList.add('hidden');
+            document.getElementById('company-view').classList.add('hidden');
+            document.getElementById('teacher-view').classList.add('hidden');
+
+            document.getElementById(viewId).classList.remove('hidden');
+            currentPortal = viewId;
+
+            // Reset tab styles
+            const btnS = document.getElementById('btn-portal-student');
+            const btnC = document.getElementById('btn-portal-company');
+            const btnT = document.getElementById('btn-portal-teacher');
+
+            [btnS, btnC, btnT].forEach(btn => {
+                btn.className = "px-2.5 py-1.5 rounded-md text-slate-500 hover:text-slate-900 dark:hover:text-white transition";
+            });
+
+            if(viewId === 'student-view') btnS.className = "px-2.5 py-1.5 rounded-md bg-white dark:bg-slate-700 text-brand-primary font-bold shadow-sm transition";
+            if(viewId === 'company-view') btnC.className = "px-2.5 py-1.5 rounded-md bg-white dark:bg-slate-700 text-brand-primary font-bold shadow-sm transition";
+            if(viewId === 'teacher-view') btnT.className = "px-2.5 py-1.5 rounded-md bg-white dark:bg-slate-700 text-brand-primary font-bold shadow-sm transition";
+        }
+
+        function toggleDarkMode() {
+            isDarkMode = !isDarkMode;
+            if(isDarkMode) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+            if(radarChartInstance) renderRadarChart();
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'JP' ? 'EN' : 'JP';
+            document.getElementById('lang-label').innerText = currentLang;
+            // Simplified localization toggle for demonstration
+            if(currentLang === 'EN') {
+                document.querySelector('[data-i18n="hero-desc"]').innerText = "Moving beyond simple self-assessment. AI visualizes the gap between student self-growth and company expectations, providing personalized action steps.";
+            } else {
+                document.querySelector('[data-i18n="hero-desc"]').innerText = "単なる自己分析で終わらせない。「自己成長志向」の学生と「組織貢献志向」の企業との【主体性の定義のギャップ】をAIが可視化・分析。個別最適化された1段階上のチャレンジへ伴走します。";
+            }
+        }
+
+        function runDiagnosisFlow() {
+            document.getElementById('diag-start-box').classList.add('hidden');
+            document.getElementById('diag-active-box').classList.remove('hidden');
+            currentQuestionIndex = 0;
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = diagnosisQuestions[currentQuestionIndex];
+            document.getElementById('diag-cat-badge').innerText = q.cat;
+            document.getElementById('diag-question-text').innerText = q.text;
+            document.getElementById('diag-progress-text').innerText = `${currentQuestionIndex + 1} / ${diagnosisQuestions.length}`;
+            
+            const progressPct = ((currentQuestionIndex + 1) / diagnosisQuestions.length) * 100;
+            document.getElementById('diag-progress-bar').style.width = `${progressPct}%`;
+        }
+
+        function answerQuestion(val) {
+            const q = diagnosisQuestions[currentQuestionIndex];
+            // Accumulate score mapped to category
+            if(q.cat === 'Initiative') assessmentScores.Initiative = (assessmentScores.Initiative + val) / 2;
+            if(q.cat === 'Communication') assessmentScores.Communication = (assessmentScores.Communication + val) / 2;
+            if(q.cat === 'Collaboration') assessmentScores.Collaboration = (assessmentScores.Collaboration + val) / 2;
+            if(q.cat === 'Critical Thinking') assessmentScores.CriticalThinking = (assessmentScores.CriticalThinking + val) / 2;
+            if(q.cat === 'AI Literacy') assessmentScores.AILiteracy = (assessmentScores.AILiteracy + val) / 2;
+
+            currentQuestionIndex++;
+            if(currentQuestionIndex < diagnosisQuestions.length) {
+                renderQuestion();
+            } else {
+                completeDiagnosis();
+            }
+        }
+
+        function completeDiagnosis() {
+            document.getElementById('diag-active-box').innerHTML = `
+                <div class="text-center py-8 space-y-4">
+                    <div class="w-16 h-16 mx-auto rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-2xl font-bold">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white">診断が完了しました！</h3>
+                    <p class="text-xs text-slate-500">企業基準との Gap Analysis を生成しました。下のダッシュボードをご確認ください。</p>
+                </div>
+            `;
+            renderRadarChart();
+            renderGapBars();
+        }
+
+        function renderRadarChart() {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            
+            if(radarChartInstance) radarChartInstance.destroy();
+
+            const isDark = document.documentElement.classList.contains('dark');
+            const textColor = isDark ? '#F1F5F9' : '#1E293B';
+            const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+
+            // Converting 1-5 scale to percentage (0-100)
+            const studentData = [
+                assessmentScores.Initiative * 20,
+                assessmentScores.Communication * 20,
+                assessmentScores.Collaboration * 20,
+                assessmentScores.CriticalThinking * 20,
+                assessmentScores.AILiteracy * 20
+            ];
+
+            const companyData = [
+                companyExpectations.Initiative * 20,
+                companyExpectations.Communication * 20,
+                companyExpectations.Collaboration * 20,
+                companyExpectations.CriticalThinking * 20,
+                companyExpectations.AILiteracy * 20
+            ];
+
+            radarChartInstance = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Initiative (主体性)', 'Communication (対話)', 'Collaboration (協働)', 'Critical Thinking (思考)', 'AI Literacy (AI活用)'],
+                    datasets: [
+                        {
+                            label: 'あなた (現時点)',
+                            data: studentData,
+                            backgroundColor: 'rgba(106, 92, 255, 0.25)',
+                            borderColor: '#6A5CFF',
+                            borderWidth: 2,
+                            pointBackgroundColor: '#6A5CFF'
+                        },
+                        {
+                            label: '企業期待値',
+                            data: companyData,
+                            backgroundColor: 'rgba(244, 63, 94, 0.15)',
+                            borderColor: '#F43F5E',
+                            borderWidth: 2,
+                            borderDash: [4, 4],
+                            pointBackgroundColor: '#F43F5E'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            min: 0,
+                            max: 100,
+                            ticks: { display: false },
+                            grid: { color: gridColor },
+                            pointLabels: { color: textColor, font: { size: 10, weight: 'bold' } }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        function renderGapBars() {
+            const container = document.getElementById('gap-bars-container');
+            container.innerHTML = '';
+
+            const categories = [
+                { name: 'Initiative (主体性)', key: 'Initiative' },
+                { name: 'Collaboration (協働力)', key: 'Collaboration' },
+                { name: 'Communication (対話力)', key: 'Communication' }
+            ];
+
+            categories.forEach(cat => {
+                const sScore = Math.round((assessmentScores[cat.key] || 3) * 20);
+                const cScore = Math.round((companyExpectations[cat.key] || 4.2) * 20);
+                const gap = Math.max(0, cScore - sScore);
+
+                const div = document.createElement('div');
+                div.className = "space-y-1";
+                div.innerHTML = `
+                    <div class="flex justify-between text-xs font-bold">
+                        <span class="text-slate-700 dark:text-slate-200">${cat.name}</span>
+                        <span class="text-rose-500 font-extrabold">Gap: -${gap}%</span>
+                    </div>
+                    <div class="w-full h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden flex">
+                        <div class="h-full bg-brand-primary" style="width: ${sScore}%" title="あなた: ${sScore}%"></div>
+                        <div class="h-full bg-rose-400/40" style="width: ${gap}%" title="ギャップ: ${gap}%"></div>
+                    </div>
+                    <div class="flex justify-between text-[10px] text-slate-400">
+                        <span>You: ${sScore}%</span>
+                        <span>Company Expectation: ${cScore}%</span>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        async function sendMessage() {
+            const inputEl = document.getElementById('chat-input');
+            const text = inputEl.value.trim();
+            if(!text) return;
+
+            // Append User Message
+            appendChatMessage('user', text);
+            inputEl.value = '';
+
+            // AI Loading Indicator
+            const loadingId = appendChatMessage('ai', '<i class="fa-solid fa-spinner animate-spin mr-2"></i> AIコーチが回答を考えています...');
+
+            // Check if user entered custom Gemini API Key
+            const apiKey = document.getElementById('user-gemini-key').value.trim();
+
+            if(apiKey) {
+                try {
+                    const responseText = await callGeminiAPI(apiKey, text);
+                    updateChatMessage(loadingId, responseText);
+                } catch(e) {
+                    updateChatMessage(loadingId, `【APIエラー】キーの確認を行ってください。フォールバック応答に切り替えます。<br>${getSimulatedAIResponse(text)}`);
+                }
+            } else {
+                // Simulated intelligent responses based on prompt
+                setTimeout(() => {
+                    updateChatMessage(loadingId, getSimulatedAIResponse(text));
+                }, 1000);
+            }
+        }
+
+        function sendQuickPrompt(promptText) {
+            document.getElementById('chat-input').value = promptText;
+            sendMessage();
+        }
+
+        function appendChatMessage(sender, content) {
+            const container = document.getElementById('chat-messages');
+            const msgId = 'msg-' + Date.now();
+            const isUser = sender === 'user';
+
+            const div = document.createElement('div');
+            div.className = `flex items-start space-x-3 ${isUser ? 'flex-row-reverse space-x-reverse' : ''}`;
+            div.id = msgId;
+
+            div.innerHTML = `
+                <div class="w-8 h-8 rounded-xl ${isUser ? 'bg-slate-800 text-white' : 'bg-brand-primary text-white'} flex items-center justify-center text-sm font-bold flex-shrink-0">
+                    ${isUser ? 'YOU' : 'AI'}
+                </div>
+                <div class="p-4 rounded-2xl ${isUser ? 'bg-brand-primary text-white' : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200'} text-xs sm:text-sm max-w-lg leading-relaxed shadow-sm">
+                    ${content}
+                </div>
+            `;
+
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+            return msgId;
+        }
+
+        function updateChatMessage(msgId, newContent) {
+            const el = document.getElementById(msgId);
+            if(el) {
+                const bubble = el.querySelector('div:nth-child(2)');
+                if(bubble) bubble.innerHTML = newContent;
+            }
+        }
+
+        async function callGeminiAPI(key, userPrompt) {
+            const systemPrompt = "あなたは大学のAIコーチです。学生の診断結果（Initiativeが企業水準より低め）を理解し、否定せず「スモールステップ（授業での質問など）」を提案・伴走してください。";
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${key}`;
+
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: userPrompt }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] }
+                })
+            });
+            const data = await res.json();
+            return data.candidates[0].content.parts[0].text;
+        }
+
+        function getSimulatedAIResponse(prompt) {
+            if(prompt.includes('簡単な') || prompt.includes('アクション')) {
+                return "今日できる一番簡単なアクションは、**「次の講義で、先生の話の中で気になった単語を1つノートの隅にメモすること」**です！挙手が難しければ、講義終了後に先生の元へ行って『ここが面白かったです』と一言伝えるだけでも、主体性のLevel 1クリアになりますよ！";
+            }
+            if(prompt.includes('勇気') || prompt.includes('失敗')) {
+                return "失敗が怖いのはごく自然な感情です！企業が求める主体性とは『完璧な発言をすること』ではなく、**『未完成でも一歩前に踏み出す姿勢』**のことです。間違えても評価が下がることはありません。一緒に準備してみましょう！";
+            }
+            return "素晴らしい相談ですね！あなたの「自己成長したい」という気持ちを、企業が期待する「周囲に価値を創出する行動」へと一歩ずつ変換していきましょう。まずはLevel 1チャレンジの『授業で質問する準備』から一緒にやってみませんか？";
+        }
+
+        function analyzeStoryWithAI() {
+            const input = document.getElementById('story-input').value.trim();
+            const outputBox = document.getElementById('story-output-content');
+            const statusEl = document.getElementById('story-status');
+
+            if(!input) {
+                alert('エピソードを入力してください。');
+                return;
+            }
+
+            statusEl.innerText = "AI解析中...";
+            outputBox.innerHTML = '<div class="text-brand-primary"><i class="fa-solid fa-spinner animate-spin"></i> コンピテンシー抽出 & ES文面への自動生成を行なっています...</div>';
+
+            setTimeout(() => {
+                statusEl.innerText = "解析完了";
+                outputBox.innerHTML = `
+                    <div class="space-y-3">
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2.5 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 font-bold text-xs">抽出コンピテンシー: 課題発見型主体性</span>
+                            <span class="px-2.5 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-bold text-xs">協働力 (周囲巻き込み)</span>
+                        </div>
+
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 space-y-1">
+                            <div class="font-bold text-xs text-slate-700 dark:text-slate-200">生成されたガクチカ・ES要約 (企業訴求型)</div>
+                            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                                「ゼミのグループ発表において議論の停滞という課題に対し、自ら議論の土台となるたたき台を作成・提示することで全員の主体的な発言を促進。チームの成果（最優秀賞）に貢献した。」
+                            </p>
+                        </div>
+
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 space-y-1">
+                            <div class="font-bold text-xs text-slate-700 dark:text-slate-200">English Summary (For GPAC / International)</div>
+                            <p class="text-xs text-slate-600 dark:text-slate-300 italic">
+                                "Demonstrated proactive leadership in seminar coursework by drafting an initial framework to resolve discussion stagnation, resulting in team excellence."
+                            </p>
+                        </div>
+                    </div>
+                `;
+            }, 1200);
+        }
+
+        function toggleChallengeComplete(btn) {
+            btn.classList.remove('border-brand-primary', 'text-brand-primary');
+            btn.classList.add('bg-emerald-500', 'text-white', 'border-emerald-500');
+            btn.innerHTML = '<i class="fa-solid fa-check-double mr-1"></i> 達成完了！ Level 2 解放';
+            
+            // Re-render chart with boosted initiative
+            assessmentScores.Initiative = Math.min(5, assessmentScores.Initiative + 0.8);
+            renderRadarChart();
+            renderGapBars();
+        }
+
+        window.onload = function() {
+            renderRadarChart();
+            renderGapBars();
+        };
+    </script>
+</body>
+</html>
